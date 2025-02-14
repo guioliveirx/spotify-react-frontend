@@ -1,0 +1,59 @@
+/* Reset CSS */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100svh;
+}
+
+/* HEADER */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.header-link:hover {
+    color: #1DB954;
+    transition: color 0.3s ease-in;
+}
+
+/* MAIN */
+
+.main {
+    flex: 1;
+    padding: 20px;
+    margin: 10px 10px 10px;
+    background-image: linear-gradient(to bottom, #062d14, transparent);
+    border-radius: 10px;
+}
+
+.main-titles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-link:hover {
+    text-decoration: underline;
+    transition: color 0.3s ease-in;
+}
