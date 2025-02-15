@@ -1,16 +1,19 @@
-import React from 'react'
-import logoSpotify from '../assets/logo/spotify-logo.png'
+import React from "react";
+import logoSpotify from "../assets/logo/spotify-logo.png";
+import { Link } from "react-router-dom";
 
 const Header = () => {
-  return (
-    <header className='header'>
-      <img src={logoSpotify} alt="Imagem da logo do Spotify" />
+    return (
+        <header className="header">
+            <Link to="/">
+                <img src={logoSpotify} alt="Imagem da logo do Spotify" />
+            </Link>
 
-      <a className='header-link' href="/">
-        <h1>Spotify</h1>
-      </a>
-    </header>
-  )
-}
+            <Link className="header-link" to="/">
+                <h1>Spotify</h1>
+            </Link>
+        </header>
+    );
+};
 
-export default Header
+export default Header;
