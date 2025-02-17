@@ -23,8 +23,8 @@ const SingleItem = ({ id, image, name, banner, artist = undefined, idPath }) => 
                 <div className="single-item__texts">
                     <div className="single-item__2lines">
                         <p className="single-item__title">{name}</p>
-                        <p className="single-item__type">{artist ?? "Artista"}</p>
                     </div>
+                        <p className="single-item__type">{artist ?? "Artista"}</p>
                 </div>
             </Link>
         </>

@@ -7,11 +7,11 @@ import {
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Player = () => {
+const Player = ({ randomIdFromArtist, randomIdFromArtist2,  duration }) => {
     return (
         <div className="player">
             <div className="player__controllers">
-                <Link to="/song/1">
+                <Link to={`/song/${randomIdFromArtist}`}>
                     <FontAwesomeIcon
                         className="player__icon"
                         icon={faBackwardStep}
@@ -21,7 +21,7 @@ const Player = () => {
                     className="player__icon player__icon--play"
                     icon={faCirclePlay}
                 />
-                <Link to="/song/3">
+                <Link to={`/song/${randomIdFromArtist2}`}>
                     <FontAwesomeIcon
                         className="player__icon"
                         icon={faForwardStep}
