@@ -1,7 +1,7 @@
 import React from "react";
 import SongItem from "./SongItem";
 
-const SongList = () => {
+const SongList = ({songsArray}) => {
     return (
         <div className="song-list">
             <SongItem />
