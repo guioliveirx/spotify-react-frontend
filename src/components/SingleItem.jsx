@@ -3,10 +3,10 @@ import { faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-const SingleItem = ({ id, image, name, banner, artist = undefined, idPath }) => {
+const SingleItem = ({ _id, image, name, banner, artist = undefined, idPath }) => {
     return (
         <>
-            <Link to={`${idPath}/${id}`} className="single-item">
+            <Link to={`${idPath}/${_id}`} className="single-item">
                 <div className="single-item__div-image-button">
                     <FontAwesomeIcon
                         className="single-item__icon"
