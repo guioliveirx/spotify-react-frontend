@@ -20,8 +20,6 @@ const Artist = () => {
     let randomIndex = Math.floor(Math.random() * (songsArrayFromArtist.length - 1))
     let randomIdFromArtist = songsArrayFromArtist[randomIndex].id;
 
-    console.log(songsArrayFromArtist);
-
     return (
         <div className="artist">
             <div
@@ -37,6 +35,7 @@ const Artist = () => {
                 <h2>Populares</h2>
 
                 <SongList songsArray={songsArrayFromArtist}/>
+
             </div>
             <Link to={`/song/${randomIdFromArtist}`}>
                 <FontAwesomeIcon
