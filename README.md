@@ -14,6 +14,35 @@ Recursos: </br>
 
 O aplicativo se conecta a um backend para buscar dados de música e fornecer uma experiência interativa ao usuário. 🚀🎵
 
+## Como instalar
+
+Clone o projeto, utilizando o terminal:
+
+```bash
+  git clone https://github.com/guioliveirx/spotify-react-frontend.git
+```
+
+Em seguida:
+
+```bash
+  npm install
+```
+
+Para rodar o projeto:
+
+```bash
+  npm run dev
+```
+
+## Autores e Agradecimentos
+
+- [guioliveirx](https://github.com/guioliveirx) </br>
+- [Hastag Treinamentos](https://www.hashtagtreinamentos.com/)
+
+Obrigado por ter chegado até aqui! 
+
+Esse projeto foi feito com carinho e atenção, mas acima disso, com profissionalidade. Espero que tenha gostado, e caso tenha interesse, olhe meus outros projetos, ou me mande uma mensagem no [linkedin](https://www.linkedin.com/in/guioliveira2002/) ou [whatsapp](https://wa.me/5571981847173?text=Ol%C3%A1+Guilherme%21v).
+
 #
 
 ![Badges](https://skillicons.dev/icons?i=react,vite,javascript)
