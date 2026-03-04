@@ -2,9 +2,11 @@ import React from 'react'
 import Main from '../components/Main'
 
 const Home = () => {
-  return (
-    <Main/>
-  )
+    return (
+        <div className="pt-4">
+            <Main />
+        </div>
+    )
 }
 
 export default Home

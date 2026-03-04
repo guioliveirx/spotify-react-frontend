@@ -5,9 +5,8 @@ import { songsArray } from "../assets/database/songs";
 
 const Main = ({ type }) => {
     return (
-        <main className="main">
-            {/* Item List de Artistas */}
-            {type === "artists" || type === undefined ? (
+        <div className="px-6 pb-8 flex flex-col gap-10 animate-fade-in">
+            {(type === "artists" || type === undefined) && (
                 <ItemList
                     title="Artistas"
                     items={8}
@@ -15,12 +14,9 @@ const Main = ({ type }) => {
                     path="/artists"
                     idPath="/artist"
                 />
-            ) : (
-                <></>
             )}
 
-            {/* Item List de Músicas */}
-            {type === "songs" || type === undefined ? (
+            {(type === "songs" || type === undefined) && (
                 <ItemList
                     title="Músicas"
                     items={16}
@@ -28,10 +24,8 @@ const Main = ({ type }) => {
                     path="/songs"
                     idPath="/song"
                 />
-            ) : (
-                <>  </>
             )}
-        </main>
+        </div>
     );
 };
 
