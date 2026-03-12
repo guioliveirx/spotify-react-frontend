@@ -1,13 +1,15 @@
 import React from "react";
-import { Play } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Play, Pause } from "lucide-react";
+import { useParams } from "react-router-dom";
 import SongList from "../components/SongList";
 import { artistArray } from "../assets/database/artists";
 import { songsArray } from "../assets/database/songs";
 import { cn } from "../lib/utils";
+import { useAudio } from "../contexts/AudioContext";
 
 const Artist = () => {
     const { id } = useParams();
+    const { playSong, currentSong, isPlaying } = useAudio();
 
     const artistObj = artistArray.filter(
         (currentValue) => currentValue._id === id
@@ -17,8 +19,7 @@ const Artist = () => {
         (currentSongObj) => currentSongObj.artist === artistObj.name
     );
 
-    let randomIndex = Math.floor(Math.random() * (songsArrayFromArtist.length - 1));
-    let randomIdFromArtist = songsArrayFromArtist[randomIndex]._id;
+    const isArtistPlaying = isPlaying && currentSong && currentSong.artist === artistObj.name;
 
     return (
         <div className="animate-fade-in">
@@ -43,8 +44,15 @@ const Artist = () => {
             <div className="bg-gradient-to-b from-black/40 to-spotify-dark-base">
                 {/* Barra de ações - Nielsen: Visibilidade do Status */}
                 <div className="flex items-center gap-6 p-6">
-                    <Link
-                        to={`/song/${randomIdFromArtist}`}
+                    <button
+                        onClick={() => {
+                            if (isArtistPlaying) {
+                                playSong(currentSong);
+                            } else {
+                                const firstSong = songsArrayFromArtist[0];
+                                if (firstSong) playSong(firstSong);
+                            }
+                        }}
                         className={cn(
                             "w-14 h-14 flex items-center justify-center rounded-full",
                             "bg-spotify-green text-black",
@@ -54,8 +62,12 @@ const Artist = () => {
                         title={`Reproduzir músicas de ${artistObj.name}`}
                         aria-label={`Reproduzir músicas de ${artistObj.name}`}
                     >
-                        <Play size={24} fill="currentColor" className="ml-1" />
-                    </Link>
+                        {isArtistPlaying ? (
+                            <Pause size={24} fill="currentColor" />
+                        ) : (
+                            <Play size={24} fill="currentColor" className="ml-1" />
+                        )}
+                    </button>
                 </div>
 
                 {/* Lista de músicas populares */}

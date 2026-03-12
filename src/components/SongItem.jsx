@@ -1,9 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Play } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 import { cn } from "../lib/utils";
+import { useAudio } from "../contexts/AudioContext";
+import { songsArray } from "../assets/database/songs";
 
 const SongItem = ({ image, name, duration, audio, artist, _id, index }) => {
+    const { playSong, currentSong, isPlaying } = useAudio();
+
+    const isCurrentSong = currentSong && currentSong._id === _id;
+    const isCurrentPlaying = isCurrentSong && isPlaying;
+
+    const handlePlay = (e) => {
+        e.preventDefault();
+        const song = songsArray.find((s) => s._id === _id);
+        if (song) playSong(song);
+    };
+
     return (
         <Link
             to={`/song/${_id}`}
@@ -16,15 +29,25 @@ const SongItem = ({ image, name, duration, audio, artist, _id, index }) => {
             aria-label={`${name} por ${artist}`}
         >
             {/* Número / ícone play */}
-            <div className="flex items-center justify-center w-4">
-                <span className="text-sm text-spotify-text-secondary tabular-nums group-hover:hidden">
-                    {index + 1}
-                </span>
-                <Play
-                    size={14}
-                    fill="white"
-                    className="hidden group-hover:block text-white"
-                />
+            <div className="flex items-center justify-center w-4" onClick={handlePlay}>
+                {isCurrentPlaying ? (
+                    <Pause
+                        size={14}
+                        fill="white"
+                        className="text-spotify-green"
+                    />
+                ) : (
+                    <>
+                        <span className="text-sm text-spotify-text-secondary tabular-nums group-hover:hidden">
+                            {index + 1}
+                        </span>
+                        <Play
+                            size={14}
+                            fill="white"
+                            className="hidden group-hover:block text-white"
+                        />
+                    </>
+                )}
             </div>
 
             {/* Album art + nome */}
@@ -36,7 +59,10 @@ const SongItem = ({ image, name, duration, audio, artist, _id, index }) => {
                     loading="lazy"
                 />
                 <div className="min-w-0">
-                    <p className="text-sm font-medium text-white truncate group-hover:text-spotify-green transition-colors">
+                    <p className={cn(
+                        "text-sm font-medium truncate transition-colors",
+                        isCurrentSong ? "text-spotify-green" : "text-white group-hover:text-spotify-green"
+                    )}>
                         {name}
                     </p>
                     {artist && (

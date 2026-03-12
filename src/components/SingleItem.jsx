@@ -1,9 +1,29 @@
 import React from "react";
-import { Play } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "../lib/utils";
+import { useAudio } from "../contexts/AudioContext";
+import { songsArray } from "../assets/database/songs";
 
 const SingleItem = ({ _id, image, name, banner, artist = undefined, idPath }) => {
+    const { playSong, currentSong, isPlaying } = useAudio();
+
+    const isSong = !!artist;
+    const isCurrentSong = isSong && currentSong && currentSong._id === _id;
+    const isCurrentPlaying = isCurrentSong && isPlaying;
+
+    const handlePlay = (e) => {
+        e.preventDefault();
+        if (isSong) {
+            const song = songsArray.find((s) => s._id === _id);
+            if (song) playSong(song);
+        } else {
+            // For artists, play the first song from that artist
+            const artistSong = songsArray.find((s) => s.artist === name);
+            if (artistSong) playSong(artistSong);
+        }
+    };
+
     return (
         <Link
             to={`${idPath}/${_id}`}
@@ -39,15 +59,21 @@ const SingleItem = ({ _id, image, name, banner, artist = undefined, idPath }) =>
                         "w-12 h-12 flex items-center justify-center",
                         "rounded-full bg-spotify-green shadow-xl shadow-black/50",
                         "text-black hover:bg-spotify-green-light hover:scale-105",
-                        "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0",
+                        isCurrentPlaying
+                            ? "opacity-100 translate-y-0"
+                            : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0",
                         "transition-all duration-300 ease-out",
                         "focus:outline-none focus:opacity-100 focus:translate-y-0"
                     )}
                     title={`Reproduzir ${name}`}
                     aria-label={`Reproduzir ${name}`}
-                    onClick={(e) => e.preventDefault()}
+                    onClick={handlePlay}
                 >
-                    <Play size={20} fill="currentColor" className="ml-0.5" />
+                    {isCurrentPlaying ? (
+                        <Pause size={20} fill="currentColor" />
+                    ) : (
+                        <Play size={20} fill="currentColor" className="ml-0.5" />
+                    )}
                 </button>
             </div>
 

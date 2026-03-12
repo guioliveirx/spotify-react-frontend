@@ -8,9 +8,11 @@ import { cn } from "../lib/utils";
 const Song = () => {
     const { id } = useParams();
 
-    const { image, name, duration, audio, artist } = songsArray.filter(
+    const songObj = songsArray.filter(
         (currentSongObj) => currentSongObj._id === id
     )[0];
+
+    const { image, name, duration, audio, artist } = songObj;
 
     const artistObj = artistArray.filter(
         (currentArtistObj) => currentArtistObj.name === artist
@@ -64,6 +66,8 @@ const Song = () => {
                 <div className="flex justify-center px-6 py-4">
                     <Player
                         duration={duration}
+                        audio={audio}
+                        songData={songObj}
                         randomIdFromArtist={randomIdFromArtist}
                         randomIdFromArtist2={randomIdFromArtist2}
                     />
