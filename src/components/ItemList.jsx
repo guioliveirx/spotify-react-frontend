@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SingleItem from "./SingleItem";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
@@ -11,6 +11,11 @@ const ItemList = ({ title, items, itemsArray, path, idPath }) => {
     /* Colbourne - Esconda: divulgação progressiva nas páginas de lista */
     /* Scapin - Densidade informacional: reduz sobrecarga cognitiva inicial */
     const [visibleCount, setVisibleCount] = useState(isHome ? items : 12);
+
+    /* Reseta contagem ao trocar filtro */
+    useEffect(() => {
+        if (!isHome) setVisibleCount(12);
+    }, [itemsArray.length]);
     const hasMore = !isHome && visibleCount < itemsArray.length;
 
     const finalItems = isHome ? items : visibleCount;

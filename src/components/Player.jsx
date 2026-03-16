@@ -1,12 +1,13 @@
 import React from "react";
 import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { cn } from "../lib/utils";
 import { useAudio } from "../contexts/AudioContext";
 import { songsArray } from "../assets/database/songs";
 
 const Player = ({ randomIdFromArtist, randomIdFromArtist2, duration, audio, songData }) => {
     const { playSong, isPlaying, currentSong, currentTime, progressPercent, seekTo, formatTime } = useAudio();
+    const navigate = useNavigate();
 
     const isCurrentSong = currentSong && songData && currentSong._id === songData._id;
     const isCurrentPlaying = isCurrentSong && isPlaying;
@@ -26,7 +27,10 @@ const Player = ({ randomIdFromArtist, randomIdFromArtist2, duration, audio, song
 
     const handleSkip = (songId) => {
         const song = songsArray.find((s) => s._id === songId);
-        if (song) playSong(song);
+        if (song) {
+            playSong(song);
+            navigate(`/song/${songId}`);
+        }
     };
 
     const displayProgress = isCurrentSong ? progressPercent : 0;
