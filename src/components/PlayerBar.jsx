@@ -1,11 +1,15 @@
 import React from "react";
-import { SkipBack, Play, Pause, SkipForward, Volume2, Maximize2 } from "lucide-react";
+import { SkipBack, Play, Pause, SkipForward, Volume2, Volume1, VolumeX, Maximize2, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "../lib/utils";
 import { useAudio } from "../contexts/AudioContext";
 
 const PlayerBar = () => {
-    const { currentSong, isPlaying, togglePlay, currentTime, totalDuration, progressPercent, seekTo, formatTime } = useAudio();
+    const {
+        currentSong, isPlaying, isLoading, togglePlay,
+        currentTime, progressPercent, seekTo, formatTime,
+        volume, setVolume, skipNext, skipPrev
+    } = useAudio();
 
     const handleProgressClick = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -13,11 +17,21 @@ const PlayerBar = () => {
         seekTo(percent);
     };
 
+    /* Nielsen H7: Flexibilidade - controle de volume interativo */
+    const handleVolumeClick = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        setVolume(percent);
+    };
+
+    /* Scapin - Condução/Convite: ícone de volume muda conforme o nível */
+    const VolumeIcon = volume === 0 ? VolumeX : volume < 0.5 ? Volume1 : Volume2;
+
     return (
         <footer
             className="h-[72px] bg-black border-t border-white/5 px-4 flex items-center justify-between gap-4"
             role="contentinfo"
-            aria-label="Player de música"
+            aria-label="Player de musica"
         >
             {/* Info da música (esquerda) */}
             <div className="flex items-center gap-3 w-[30%] min-w-0">
@@ -49,7 +63,7 @@ const PlayerBar = () => {
                         </div>
                         <div className="min-w-0">
                             <p className="text-sm font-medium truncate text-spotify-text-secondary">
-                                Nenhuma música tocando
+                                Nenhuma musica tocando
                             </p>
                         </div>
                     </>
@@ -59,32 +73,48 @@ const PlayerBar = () => {
             {/* Controles centrais */}
             <div className="flex flex-col items-center gap-1 w-[40%] max-w-[600px]">
                 <div className="flex items-center gap-5">
+                    {/* Scapin - Proteção contra erros: botões desabilitados sem música */}
                     <button
-                        className="text-spotify-text-secondary hover:text-white transition-colors"
+                        onClick={skipPrev}
+                        disabled={!currentSong}
+                        className={cn(
+                            "text-spotify-text-secondary hover:text-white transition-colors",
+                            !currentSong && "opacity-50 cursor-not-allowed hover:text-spotify-text-secondary"
+                        )}
                         title="Anterior"
-                        aria-label="Música anterior"
+                        aria-label="Musica anterior"
                     >
                         <SkipBack size={18} fill="currentColor" />
                     </button>
                     <button
                         onClick={togglePlay}
+                        disabled={!currentSong && !isLoading}
                         className={cn(
                             "w-8 h-8 flex items-center justify-center rounded-full",
-                            "bg-white text-black hover:scale-105 transition-transform"
+                            "bg-white text-black hover:scale-105 transition-transform",
+                            !currentSong && "opacity-50 cursor-not-allowed hover:scale-100"
                         )}
                         title={isPlaying ? "Pausar" : "Reproduzir"}
                         aria-label={isPlaying ? "Pausar" : "Reproduzir"}
                     >
-                        {isPlaying ? (
+                        {/* Scapin - Feedback imediato: spinner durante carregamento */}
+                        {isLoading ? (
+                            <Loader2 size={16} className="animate-spin" />
+                        ) : isPlaying ? (
                             <Pause size={16} fill="currentColor" />
                         ) : (
                             <Play size={16} fill="currentColor" className="ml-0.5" />
                         )}
                     </button>
                     <button
-                        className="text-spotify-text-secondary hover:text-white transition-colors"
-                        title="Próxima"
-                        aria-label="Próxima música"
+                        onClick={skipNext}
+                        disabled={!currentSong}
+                        className={cn(
+                            "text-spotify-text-secondary hover:text-white transition-colors",
+                            !currentSong && "opacity-50 cursor-not-allowed hover:text-spotify-text-secondary"
+                        )}
+                        title="Proxima"
+                        aria-label="Proxima musica"
                     >
                         <SkipForward size={18} fill="currentColor" />
                     </button>
@@ -110,18 +140,25 @@ const PlayerBar = () => {
                 </div>
             </div>
 
-            {/* Controles direita */}
+            {/* Controles direita - Nielsen H7: Volume funcional */}
             <div className="flex items-center gap-3 w-[30%] justify-end">
                 <div className="flex items-center gap-2">
                     <button
+                        onClick={() => setVolume(volume === 0 ? 0.66 : 0)}
                         className="text-spotify-text-secondary hover:text-white transition-colors"
-                        title="Volume"
-                        aria-label="Controle de volume"
+                        title={volume === 0 ? "Ativar som" : "Silenciar"}
+                        aria-label={volume === 0 ? "Ativar som" : "Silenciar"}
                     >
-                        <Volume2 size={18} />
+                        <VolumeIcon size={18} />
                     </button>
-                    <div className="w-24 h-1 bg-white/20 rounded-full cursor-pointer hidden sm:block">
-                        <div className="h-full w-2/3 bg-white rounded-full hover:bg-spotify-green transition-colors" />
+                    <div
+                        className="w-24 h-1 bg-white/20 rounded-full cursor-pointer hidden sm:block group"
+                        onClick={handleVolumeClick}
+                    >
+                        <div
+                            className="h-full bg-white rounded-full group-hover:bg-spotify-green transition-colors"
+                            style={{ width: `${volume * 100}%` }}
+                        />
                     </div>
                 </div>
                 <button

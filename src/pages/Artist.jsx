@@ -1,6 +1,6 @@
 import React from "react";
 import { Play, Pause } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import SongList from "../components/SongList";
 import { artistArray } from "../assets/database/artists";
 import { songsArray } from "../assets/database/songs";
@@ -11,9 +11,23 @@ const Artist = () => {
     const { id } = useParams();
     const { playSong, currentSong, isPlaying } = useAudio();
 
-    const artistObj = artistArray.filter(
-        (currentValue) => currentValue._id === id
-    )[0];
+    /* Nielsen H5: Prevenção de erros - guard clause para ID inválido */
+    const artistObj = artistArray.find((a) => a._id === id);
+
+    /* Scapin - Qualidade das mensagens de erro: mensagem amigável com ação de recuperação */
+    if (!artistObj) {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center gap-4 p-8 animate-fade-in">
+                <h2 className="text-2xl font-bold">Artista nao encontrado</h2>
+                <p className="text-spotify-text-secondary text-center max-w-md">
+                    O artista que voce procura nao existe ou foi removido.
+                </p>
+                <Link to="/artists" className="spotify-btn-primary">
+                    Ver todos os artistas
+                </Link>
+            </div>
+        );
+    }
 
     const songsArrayFromArtist = songsArray.filter(
         (currentSongObj) => currentSongObj.artist === artistObj.name
@@ -42,7 +56,7 @@ const Artist = () => {
 
             {/* Área de ações + lista de músicas */}
             <div className="bg-gradient-to-b from-black/40 to-spotify-dark-base">
-                {/* Barra de ações - Nielsen: Visibilidade do Status */}
+                {/* Barra de ações - Nielsen H1: Visibilidade do Status */}
                 <div className="flex items-center gap-6 p-6">
                     <button
                         onClick={() => {
@@ -59,8 +73,8 @@ const Artist = () => {
                             "hover:bg-spotify-green-light hover:scale-105",
                             "transition-all duration-200 shadow-lg shadow-spotify-green/25"
                         )}
-                        title={`Reproduzir músicas de ${artistObj.name}`}
-                        aria-label={`Reproduzir músicas de ${artistObj.name}`}
+                        title={`Reproduzir musicas de ${artistObj.name}`}
+                        aria-label={`Reproduzir musicas de ${artistObj.name}`}
                     >
                         {isArtistPlaying ? (
                             <Pause size={24} fill="currentColor" />
@@ -73,7 +87,13 @@ const Artist = () => {
                 {/* Lista de músicas populares */}
                 <div className="px-6 pb-8">
                     <h2 className="text-xl font-bold mb-4">Populares</h2>
-                    <SongList songsArray={songsArrayFromArtist} />
+                    {songsArrayFromArtist.length > 0 ? (
+                        <SongList songsArray={songsArrayFromArtist} />
+                    ) : (
+                        <p className="text-spotify-text-secondary text-sm">
+                            Nenhuma musica encontrada para este artista.
+                        </p>
+                    )}
                 </div>
             </div>
         </div>

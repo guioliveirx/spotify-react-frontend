@@ -9,6 +9,9 @@ import Artists from "./pages/Artists.jsx";
 import Artist from "./pages/Artist.jsx";
 import Songs from "./pages/Songs.jsx";
 import Song from "./pages/Song.jsx";
+import Search from "./pages/Search.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import Toast from "./components/Toast.jsx";
 
 const App = () => {
     return (
@@ -16,6 +19,9 @@ const App = () => {
             <AudioProvider>
                 {/* Layout principal: Header fixo no topo, conteúdo no meio, player fixo embaixo */}
                 <div className="flex flex-col h-svh overflow-hidden bg-black">
+                    {/* Toast de notificação - Nielsen H1: Visibilidade do Status */}
+                    <Toast />
+
                     {/* Área principal: sidebar + conteúdo */}
                     <div className="flex flex-1 gap-2 p-2 pb-0 overflow-hidden">
                         <Sidebar />
@@ -30,6 +36,9 @@ const App = () => {
                                     <Route path="/artist/:id" element={<Artist />} />
                                     <Route path="/songs" element={<Songs />} />
                                     <Route path="/song/:id" element={<Song />} />
+                                    <Route path="/search" element={<Search />} />
+                                    {/* Nielsen H9: Página 404 para ajudar o usuário a se recuperar */}
+                                    <Route path="*" element={<NotFound />} />
                                 </Routes>
                             </main>
                         </div>

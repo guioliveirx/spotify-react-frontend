@@ -8,15 +8,27 @@ import { cn } from "../lib/utils";
 const Song = () => {
     const { id } = useParams();
 
-    const songObj = songsArray.filter(
-        (currentSongObj) => currentSongObj._id === id
-    )[0];
+    /* Nielsen H5: Prevenção de erros - guard clause para ID inválido */
+    const songObj = songsArray.find((s) => s._id === id);
+
+    /* Scapin - Qualidade das mensagens de erro: mensagem amigável com ação de recuperação */
+    if (!songObj) {
+        return (
+            <div className="flex-1 flex flex-col items-center justify-center gap-4 p-8 animate-fade-in">
+                <h2 className="text-2xl font-bold">Musica nao encontrada</h2>
+                <p className="text-spotify-text-secondary text-center max-w-md">
+                    A musica que voce procura nao existe ou foi removida.
+                </p>
+                <Link to="/songs" className="spotify-btn-primary">
+                    Ver todas as musicas
+                </Link>
+            </div>
+        );
+    }
 
     const { image, name, duration, audio, artist } = songObj;
 
-    const artistObj = artistArray.filter(
-        (currentArtistObj) => currentArtistObj.name === artist
-    )[0];
+    const artistObj = artistArray.find((a) => a.name === artist);
 
     const songsArrayFromArtist = songsArray.filter(
         (currentSongObj) => currentSongObj.artist === artist
@@ -43,7 +55,7 @@ const Song = () => {
                 )}>
                     <img
                         src={image}
-                        alt={`Capa da música ${name}`}
+                        alt={`Capa da musica ${name}`}
                         className="w-full aspect-square object-cover"
                     />
                 </div>
@@ -54,12 +66,16 @@ const Song = () => {
                 {/* Info da música */}
                 <div className="flex flex-col items-center gap-1 pt-5 px-6">
                     <h1 className="text-lg font-bold text-center">{name}</h1>
-                    <Link
-                        to={`/artist/${artistObj._id}`}
-                        className="text-sm text-spotify-text-secondary hover:text-white hover:underline transition-colors"
-                    >
-                        {artist}
-                    </Link>
+                    {artistObj ? (
+                        <Link
+                            to={`/artist/${artistObj._id}`}
+                            className="text-sm text-spotify-text-secondary hover:text-white hover:underline transition-colors"
+                        >
+                            {artist}
+                        </Link>
+                    ) : (
+                        <span className="text-sm text-spotify-text-secondary">{artist}</span>
+                    )}
                 </div>
 
                 {/* Player centralizado */}
@@ -74,23 +90,25 @@ const Song = () => {
                 </div>
 
                 {/* Artista mini card */}
-                <div className="flex justify-center pb-4">
-                    <Link
-                        to={`/artist/${artistObj._id}`}
-                        className={cn(
-                            "flex items-center gap-3 px-4 py-2 rounded-full",
-                            "bg-white/5 hover:bg-white/10 transition-colors"
-                        )}
-                        title={`Ver artista ${artist}`}
-                    >
-                        <img
-                            src={artistObj.image}
-                            alt={`Foto de ${artist}`}
-                            className="w-8 h-8 rounded-full object-cover"
-                        />
-                        <span className="text-sm font-medium">{artist}</span>
-                    </Link>
-                </div>
+                {artistObj && (
+                    <div className="flex justify-center pb-4">
+                        <Link
+                            to={`/artist/${artistObj._id}`}
+                            className={cn(
+                                "flex items-center gap-3 px-4 py-2 rounded-full",
+                                "bg-white/5 hover:bg-white/10 transition-colors"
+                            )}
+                            title={`Ver artista ${artist}`}
+                        >
+                            <img
+                                src={artistObj.image}
+                                alt={`Foto de ${artist}`}
+                                className="w-8 h-8 rounded-full object-cover"
+                            />
+                            <span className="text-sm font-medium">{artist}</span>
+                        </Link>
+                    </div>
+                )}
             </div>
         </div>
     );
